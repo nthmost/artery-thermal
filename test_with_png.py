@@ -27,7 +27,7 @@ def print_png_image(png_path):
 
 # Usage
 #print_png_image('logo.png')
-#print_png_image('mayan_borg.png')
-print_png_image('celtic_borg.png')
+#print_png_image('busts/mayan_borg.png')
+print_png_image('busts/celtic_borg.png')
 
 
