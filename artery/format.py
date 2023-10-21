@@ -23,7 +23,7 @@ def resize_image(img_path, max_width=MAX_WIDTH):
     """Returns a PNG image loaded from img_path, resizing if necessary."""
 
     # Open the image
-    img = Image.open(png_path)
+    img = Image.open(img_path)
 
     # Resize the image if its width exceeds MAX_WIDTH
     if img.width > MAX_WIDTH:

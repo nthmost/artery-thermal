@@ -1,7 +1,7 @@
 from escpos.printer import Usb
 from datetime import datetime
 
-from .format import text_to_img
+from .format import text_to_img, resize_image
 
 
 KNOWN_PRINTERS = {
@@ -32,7 +32,7 @@ class ArteryPrinter:
         self.p = get_printer(*KNOWN_PRINTERS[printer].values())
 
     def print_image(self, img):
-        self.p.image(img)
+        self.p.image(resize_image(img))
         self.p.ln()
 
     def set_style(self, bold=False, underline=0):

@@ -1,4 +1,5 @@
 from datetime import datetime
+from tempfile import NamedTemporaryFile
 from .format import text_to_img
 
 DEFAULT_COMPANY = "Community Capture Corporation"
@@ -6,13 +7,15 @@ DEFAULT_MOTTO = "We've got you. ;)"
 DEFAULT_LOGO = "wings.png"
 DEFAULT_TITLE = "MEGAVIBE 9000"
 DEFAULT_TITLE_FONT = "fonts/zig.ttf"
+DEFAULT_COUPON1 = "coupons/OlGlorpy_ChewySoup_1.png"
+DEFAULT_COUPON2 = "busts/Weatherman_Coupon.png"
 
 SAMPLE_EXPERIENCE = "You rocked your head in the most amazing DJ set in your life wondering how much acid you took as the blindfold came off. You 'll always wonder who she was -- such a great painter. You found a serene oasis in the same level as Aristotle, while he’s so smart. Your doppelganger gave several different names and claimed to be the destruction of the planet itself. The best proof is that you are still disappointed."
 
 class ExperienceReceipt:
     def __init__(self, title="MEGAVIBE9000", title_font=DEFAULT_TITLE_FONT, 
                     motto=DEFAULT_MOTTO, company=DEFAULT_COMPANY, logo=DEFAULT_LOGO,
-                    coupon1=None, coupon2=None, experience_text=None,
+                    coupon1=DEFAULT_COUPON1, coupon2=DEFAULT_COUPON2, experience_text=None,
                     date=None, time=None, receipt_no=None,
                 ):
 
@@ -56,7 +59,7 @@ class ExperienceReceipt:
 
         self.set_date_time()
 
-        self.receipt.append(f"[IMAGE]{self.title_image}[/IMAGE]")
+        self.receipt.append("[IMAGE]{}[/IMAGE]".format(self.save_image_temp(self.title_image)))
         self.receipt.append(f"Date: {self.date}")
         self.receipt.append(f"Time: {self.time}")
         self.receipt.append(f"[FONT size=16 bold=True]{self.header}[/FONT]")
@@ -76,4 +79,10 @@ class ExperienceReceipt:
         self.receipt.append(f"[IMAGE]{self.logo}[/IMAGE]")
         self.receipt.append(f"[IMAGE]{self.coupon2}[/IMAGE]")
         self.receipt.append(f"Receipt No.: {self.receipt_no}")
+
+    def save_image_temp(self, img):
+        """ Save a PIL Image to a temporary file and return its path. """
+        temp_file = NamedTemporaryFile(delete=False, suffix=".png")
+        img.save(temp_file, "PNG")
+        return temp_file.name
 
