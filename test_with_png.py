@@ -26,8 +26,8 @@ def print_png_image(png_path):
     p.cut()
 
 # Usage
-#print_png_image('logo.png')
+print_png_image('logos/logo.png')
 #print_png_image('mayan_borg.png')
-print_png_image('celtic_borg.png')
+#print_png_image('celtic_borg.png')
 
 

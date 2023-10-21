@@ -1,2 +1,5 @@
 Pillow
 escpos
+spacy
+markovify
+

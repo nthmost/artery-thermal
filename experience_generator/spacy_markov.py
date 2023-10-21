@@ -69,8 +69,6 @@ def generate_paragraph(model, num_sentences=5):
 # Generate a paragraph with 5 sentences from the combined model
 print(format_text(generate_paragraph(combined_model)))
 
-
-
 def corpus_insights(corpus):
     # Tokenize using spaces
     tokens = corpus.split()
@@ -90,4 +88,12 @@ def corpus_insights(corpus):
 
 #print("\nTESCREAL DB Insights:")
 #corpus_insights(tescreal_db)
+
+
+#def generate_experience(party_weight, tescreal_weight):
+#    return 
+
+def generate_experience():
+    return format_text(generate_paragraph(combined_model))
+
 
