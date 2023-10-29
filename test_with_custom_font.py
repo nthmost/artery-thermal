@@ -5,10 +5,11 @@ from escpos.printer import Usb
 def text_to_img(text, font_path, font_size):
     """Convert text to an image using a specific TTF font."""
     font = ImageFont.truetype(font_path, font_size)
-    width, height = font.getsize(text)
+    width = font.getlength(text)
     
     # Create the actual image with the correct size
-    img = Image.new('L', (width, height), color=255)
+    #img = Image.new('L', (width, height), color=255)
+    img = Image.new('L', (width, 32.0), color=255)
     d = ImageDraw.Draw(img)
     d.text((0, 0), text, font=font, fill=0)
     return img
@@ -19,7 +20,7 @@ VENDOR_ID = 0x6868
 PRODUCT_ID = 0x0200
 
 # Create an image from text with a custom font
-FONT_PATH = "zig.ttf"  # Adjust this to the path of your TTF font
+FONT_PATH = "fonts/zig.ttf"  # Adjust this to the path of your TTF font
 img = text_to_img("MEGAVIBE 9000", FONT_PATH, 32)  # Adjust font size as needed
 
 # Print the image using escpos
