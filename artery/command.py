@@ -1,6 +1,8 @@
 from escpos.printer import Usb
 from datetime import datetime
+import textwrap
 
+from .base import BasePrinter
 from .format import text_to_img, resize_image
 
 
@@ -15,7 +17,7 @@ def get_printer(vendor_id, product_id):
     return Usb(vendor_id, product_id)
 
 
-class ArteryPrinter:
+class ArteryPrinter(BasePrinter):
 
     FONT_MAP = {
         'xlarge': "\x1D\x21\x11",
@@ -27,6 +29,14 @@ class ArteryPrinter:
         'underline': "\x1B\x2D\x01",
         'double_underline': "\x1B\x2D\x02"
     }
+    
+    FONT_SIZE_TO_MAX_CHARS = {
+        'xlarge': 16,
+        'large': 24,
+        'medium': 28,
+        'normal': 32,
+        'small': 40
+    }
 
     def __init__(self, printer="artery", **kwargs):
         self.p = get_printer(*KNOWN_PRINTERS[printer].values())
@@ -34,6 +44,14 @@ class ArteryPrinter:
     def print_image(self, img):
         self.p.image(resize_image(img))
         self.p.ln()
+
+    def set_center_alignment(self):
+        """Set center alignment using raw ESC/POS commands."""
+        self.p.text("\x1B\x61\x01")  # ESC a 1
+
+    def unset_center_alignment(self):
+        """Revert to left alignment using raw ESC/POS commands."""
+        self.p.text("\x1B\x61\x00")  # ESC a 0
 
     def set_style(self, bold=False, underline=0):
         if bold:
@@ -54,32 +72,42 @@ class ArteryPrinter:
     def print_text(self, text, font_size=None, font_path=None, align=DEFAULT_ALIGN, bold=False, underline=0):
         # Reset all settings at the start for a clean slate
         self.reset_settings()
+
+        #self.p.set(align=align)
+        if align=="center":
+            self.set_center_alignment()
         
-        self.p.set(align=align)
-        
+
         if font_path:
             if not font_size:
                 raise Exception("print_text: You need to set font_size when using font_path keyword.")
-            img = text_to_img(font_path, font_size)
+            img = text_to_img(text, font_path, font_size)
             self.print_image(img)
             return
 
         # 1. Set size
         if font_size:
             self.set_font_size(font_size)
-        
+
         # 2. Set other styles
         if bold:
             self.set_style(bold=True)
         if underline:
             self.set_style(underline=underline)
-        
+
+        # Determine max chars per line based on font size
+        max_chars = self.FONT_SIZE_TO_MAX_CHARS.get(font_size, self.FONT_SIZE_TO_MAX_CHARS['normal'])
+
+        # Wrap the text
+        wrapped_text = textwrap.fill(text, width=max_chars)
+
         # 3. Print text
-        self.p.text(text + "\n")
-        
+        self.p.text(wrapped_text + "\n")
+
         # 4. Reset to default styles and size
         self.reset_settings()
         self.p.ln()
+
 
     def reset_settings(self):
         """Reset settings to the printer's default."""

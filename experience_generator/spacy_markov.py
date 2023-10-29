@@ -26,7 +26,7 @@ party_model = build_model(party_db)
 tescreal_model = build_model(tescreal_db)
 
 # Combine the models
-combined_model = markovify.combine([party_model, tescreal_model], [3, 1])
+combined_model = markovify.combine([party_model, tescreal_model], [2, 1])
 
 
 def format_text(text):
@@ -67,8 +67,18 @@ def generate_paragraph(model, num_sentences=5):
     return ' '.join(paragraph)
 
 # Generate a paragraph with 5 sentences from the combined model
-print(format_text(generate_paragraph(combined_model)))
+# print(
 
+
+def generate_experience():
+	return format_text(generate_paragraph(combined_model))
+
+
+
+
+
+
+#---#
 def corpus_insights(corpus):
     # Tokenize using spaces
     tokens = corpus.split()

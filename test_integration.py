@@ -1,9 +1,9 @@
 from datetime import datetime
-from artery import ArteryPrinter
+from artery import MockArteryPrinter, ArteryPrinter
 from artery import ExperienceReceipt, ReceiptImage, ReceiptText
 
-# Sample experience text for when none is provided
-SAMPLE_EXPERIENCE = "This is a sample experience text to be printed on the receipt."
+from experience_generator import generate_experience
+
 
 # Function to print the receipt
 def print_receipt(receipt):
@@ -18,7 +18,10 @@ def print_receipt(receipt):
     printer.finish()
 
 # Example of how to use the ExperienceReceipt class and the print_receipt function
-receipt = ExperienceReceipt(title="MEGAVIBE9000")
+
+exp_text = generate_experience()
+
+receipt = ExperienceReceipt(title="MEGAVIBE9000", experience_text=exp_text)
 receipt.build_receipt()
 
 print_receipt(receipt)
