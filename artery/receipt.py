@@ -4,14 +4,11 @@ from .format import text_to_img, resize_image
 
 DEFAULT_COMPANY = "Community Capture Corporation"
 DEFAULT_MOTTO = "We've got you. ;)"
-DEFAULT_LOGO = "wings.png"
+DEFAULT_LOGO = "ccc/wings.png"
 DEFAULT_TITLE = "MEGAVIBE 9000"
 DEFAULT_TITLE_FONT = "fonts/zig.ttf"
-DEFAULT_COUPON1 = "coupons/OlGlorpys_ChewySoup.png"
-DEFAULT_COUPON2 = "busts/Weatherman_Coupon.png"
 
 SAMPLE_EXPERIENCE = "You rocked your head in the most amazing DJ set in your life wondering how much acid you took as the blindfold came off. You 'll always wonder who she was -- such a great painter. You found a serene oasis in the same level as Aristotle, while he’s so smart. Your doppelganger gave several different names and claimed to be the destruction of the planet itself. The best proof is that you are still disappointed."
-
 
 
 class ReceiptImage:
@@ -56,7 +53,7 @@ class ReceiptText:
 class ExperienceReceipt:
     def __init__(self, title="MEGAVIBE9000", title_font=DEFAULT_TITLE_FONT, 
                     motto=DEFAULT_MOTTO, company=DEFAULT_COMPANY, logo=DEFAULT_LOGO,
-                    coupon1=DEFAULT_COUPON1, coupon2=DEFAULT_COUPON2, experience_text=None,
+                    coupon1=None, coupon2=None, experience_text=None,
                     date=None, time=None, receipt_no=None,
                 ):
 
@@ -99,7 +96,7 @@ class ExperienceReceipt:
         self.set_date_time()
 
         # Top matter: store name, date, time.
-        self.receipt.append(ReceiptText(self.title, font=self.title_font, size="large"))
+        self.receipt.append(ReceiptText(self.title, font=self.title_font, size="large", align="center"))
         self.receipt.append(ReceiptText("Date: {self.date}"))
         self.receipt.append(ReceiptText("Time: {self.time}"))
 
@@ -115,15 +112,20 @@ class ExperienceReceipt:
         part2 = self.body.split(".")[3:]
 
         self.receipt.append(ReceiptText("{}".format((". ").join(part1) + ". ")))
-        self.receipt.append(ReceiptImage(self.coupon1))
+        if self.coupon1:
+            self.receipt.append(ReceiptImage(self.coupon1))
         self.receipt.append(ReceiptText("{}".format((". ").join(part2) + ". ")))
 
         # -- end of Experience section --
         
         # -- Company footer should be centered. Name -> "motto" -> logo.
-        self.receipt.append(ReceiptText(self.company, size="medium"))
+        self.receipt.append(ReceiptText(self.company, align="center", size="medium"))
         self.receipt.append(ReceiptText(self.motto))
-        self.receipt.append(ReceiptImage(self.coupon2))
+        self.receipt.append(ReceiptImage(self.logo))
+
+        if self.coupon2:
+            self.receipt.append(ReceiptImage(self.coupon2))
+
         self.receipt.append(ReceiptText(f"Receipt No.: {self.receipt_no}"))
 
 
