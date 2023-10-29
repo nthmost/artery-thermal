@@ -40,10 +40,31 @@ class ArteryPrinter(BasePrinter):
 
     def __init__(self, printer="artery", **kwargs):
         self.p = get_printer(*KNOWN_PRINTERS[printer].values())
+        self.max_width=384
 
     def print_image(self, img):
-        self.p.image(resize_image(img))
+        self.p.image(resize_image(img, self.max_width))
         self.p.ln()
+
+    def set_print_density(self, density=7, break_time=7):
+        """
+        Set the print density and break time for the printer.
+        
+        Parameters:
+        - density: Print density. Value between 0 (lightest) to 7 (darkest).
+        - break_time: Print break time. Value between 0 (shortest) to 7 (longest).
+        """
+        if not (0 <= density <= 7):
+            raise ValueError("Density must be between 0 and 7 inclusive.")
+        if not (0 <= break_time <= 7):
+            raise ValueError("Break time must be between 0 and 7 inclusive.")
+
+        # Construct the command
+        cmd = bytes([0x1D, 0x28, 0x4C, 2, 0, 11, density, break_time])
+
+        # Send the command to the printer
+        self.p._raw(cmd)
+
 
     def set_center_alignment(self):
         """Set center alignment using raw ESC/POS commands."""
@@ -77,7 +98,6 @@ class ArteryPrinter(BasePrinter):
         if align=="center":
             self.set_center_alignment()
         
-
         if font_path:
             if not font_size:
                 raise Exception("print_text: You need to set font_size when using font_path keyword.")

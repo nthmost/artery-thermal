@@ -20,19 +20,6 @@ class ReceiptImage:
         self.img = None
         self.img_tmp = None
 
-"""
-    def save_image_temp(self):
-        " Save a PIL Image to a temporary file and return its path. "
-        temp_file = NamedTemporaryFile(delete=False, suffix=".png")
-
-        # load the image object if we haven't already
-        if not self.img:
-            return            
-
-        self.img.save(temp_file, "PNG")
-        return temp_file.name
-"""
-
 class ReceiptText:
 
     TYPE = "text"
@@ -84,7 +71,7 @@ class ExperienceReceipt:
     def set_receipt_no(self):
         #todo: change this to 2999 epoch timestamp
         if not self.receipt_no:
-            self.receipt_no = datetime.timestamp()
+            self.receipt_no = datetime.timestamp(datetime.now())
 
     def build_receipt(self):
         """ This function builds the receipt as a sequential array of Receipt* objects,
@@ -97,8 +84,8 @@ class ExperienceReceipt:
 
         # Top matter: store name, date, time.
         self.receipt.append(ReceiptText(self.title, font=self.title_font, size="large", align="center"))
-        self.receipt.append(ReceiptText("Date: {self.date}"))
-        self.receipt.append(ReceiptText("Time: {self.time}"))
+        self.receipt.append(ReceiptText(f"Date: {self.date}"))
+        self.receipt.append(ReceiptText(f"Time: {self.time}"))
 
         self.receipt.append(ReceiptText(self.header, size="large", bold=True))
 
@@ -126,6 +113,7 @@ class ExperienceReceipt:
         if self.coupon2:
             self.receipt.append(ReceiptImage(self.coupon2))
 
+        self.set_receipt_no()
         self.receipt.append(ReceiptText(f"Receipt No.: {self.receipt_no}"))
 
 
