@@ -27,6 +27,6 @@ def print_png_image(png_path):
 
 # Usage
 #print_png_image('OlGlorpy_ChewySoup_1.png')
-print_png_image('Weatherman_Coupon.png')
+print_png_image('coupons/Weatherman_Coupon.png')
 
 
