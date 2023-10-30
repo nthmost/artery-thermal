@@ -65,7 +65,6 @@ class ArteryPrinter(BasePrinter):
         # Send the command to the printer
         self.p._raw(cmd)
 
-
     def set_center_alignment(self):
         """Set center alignment using raw ESC/POS commands."""
         self.p.text("\x1B\x61\x01")  # ESC a 1
@@ -90,7 +89,8 @@ class ArteryPrinter(BasePrinter):
         else:
             raise ValueError(f"Font size '{size}' not recognized. Must be one of: xlarge, large, medium, normal, small")
 
-    def print_text(self, text, font_size=None, font_path=None, align=DEFAULT_ALIGN, bold=False, underline=0):
+    def print_text(self, text, font_size=None, font_path=None, align=DEFAULT_ALIGN, 
+                        letter_spacing=None, bold=False, underline=0):
         # Reset all settings at the start for a clean slate
         self.reset_settings()
 
@@ -105,9 +105,12 @@ class ArteryPrinter(BasePrinter):
             self.print_image(img)
             return
 
-        # 1. Set size
+        # 1. Set size and letter spacing
         if font_size:
             self.set_font_size(font_size)
+
+        if letter_spacing:
+            self.set_letter_spacing(letter_spacing)
 
         # 2. Set other styles
         if bold:

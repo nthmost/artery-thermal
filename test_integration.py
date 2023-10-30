@@ -3,13 +3,9 @@ from artery import MockArteryPrinter, ArteryPrinter
 from artery import ExperienceReceipt, ReceiptImage, ReceiptText
 
 from experience_generator import generate_experience
+from experience_generator import send_to_discord
 
 from artery import pick_coupon
-
-
-coupon1 = pick_coupon("coupons")
-coupon2 = pick_coupon("coupons")
-
 
 
 # Function to print the receipt
@@ -20,16 +16,30 @@ def print_receipt(receipt):
         if isinstance(obj, ReceiptImage):
             printer.print_image(obj.filepath)
         elif isinstance(obj, ReceiptText):
-            printer.print_text(obj.text, font_size=obj.size, bold=obj.bold, underline=obj.underline)
+            printer.print_text(obj.text, **obj.to_dict())
 
     printer.finish()
 
 # Example of how to use the ExperienceReceipt class and the print_receipt function
 
-exp_text = generate_experience()
 
-receipt = ExperienceReceipt(title="MEGAVIBE9000", experience_text=exp_text, coupon1=coupon1, coupon2=coupon2)
-receipt.build_receipt()
+def stripped_down_receipt():
+    exp_text = "Sample Experience"
+    receipt = ExperienceReceipt(experience_text=exp_text)
+    receipt.build_receipt()
+    return receipt
 
-print_receipt(receipt)
+
+def full_receipt():
+    exp_text = generate_experience()
+    send_to_discord(exp_text)
+    coupon1 = pick_coupon("coupons")
+    coupon2 = pick_coupon("coupons")
+
+    receipt = ExperienceReceipt(experience_text=exp_text, coupon1=coupon1, coupon2=coupon2)
+    receipt.build_receipt()
+    return receipt
+
+
+print_receipt(stripped_down_receipt())
 

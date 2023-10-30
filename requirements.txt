@@ -2,4 +2,4 @@ Pillow
 escpos
 spacy
 markovify
-
+requests

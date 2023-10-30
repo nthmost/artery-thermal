@@ -28,15 +28,7 @@ class BasePrinter:
 
 
 class MockArteryPrinter(BasePrinter):
-    
-    FONT_MAP = {
-        'xlarge': 48,
-        'large': 36,
-        'medium': 24,
-        'normal': 14,
-        'small': 10,
-    }
-    
+
     def _ensure_space(self, additional_height):
         """Expand the main receipt image if necessary."""
         if self.y_position + additional_height > self.img.height:
@@ -50,6 +42,13 @@ class MockArteryPrinter(BasePrinter):
         self.y_position = 0  # Keep track of where to draw next
         
         self.max_width = 384
+
+    def set_letter_spacing(self, spacing=0):
+        """ Set the letter spacing for the printer """
+        if 0 <= spacing <= 255:
+            self.p.text(chr(27) + chr(32) + chr(spacing))
+        else:
+            raise ValueError("Spacing must be between 0 and 255")
 
     def print_image(self, img_path):
         img = Image.open(img_path)
@@ -66,14 +65,18 @@ class MockArteryPrinter(BasePrinter):
         self.img.paste(img, box, mask)
         self.y_position += img.height + SOME_SPACING_VALUE
 
-    def print_text(self, text, font_size="normal", font_path=DEFAULT_FONT, align="left", bold=False, underline=0):
-        # Translate the font size name to an actual size in pixels/points
-        font_size_pixel = self.FONT_MAP.get(font_size, self.FONT_MAP[font_size])
+    def print_text(self, text, font_size="normal", font_path=None, align="left", 
+            letter_spacing=None, bold=False, underline=0):
+        
+        # font_path will come in as None from the ReceiptText class for "normal"
+        # thermal printer text, but to mock one up we need to specify a font.
+        if font_path is None:
+            font_path = DEFAULT_FONT
         
         # Wrap the text
         wrapped_text = "\n".join(textwrap.wrap(text, width=self.max_width))
         # Generate text as an image
-        text_img = text_to_img(wrapped_text, font_path, font_size_pixel, align)
+        text_img = text_to_img(wrapped_text, font_path, font_size, align)
         
         # Ensure there's enough space for the image
         self._ensure_space(text_img.height)

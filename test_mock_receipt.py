@@ -16,7 +16,7 @@ def print_receipt(receipt):
         if isinstance(obj, ReceiptImage):
             printer.print_image(obj.filepath)
         elif isinstance(obj, ReceiptText):
-            printer.print_text(obj.text, font_size=obj.size, bold=obj.bold, underline=obj.underline)
+            printer.print_text(obj.text, **obj.to_dict())
 
     printer.finish()
 
@@ -24,7 +24,7 @@ def print_receipt(receipt):
 
 exp_text = "You rocked your head to the most amazing DJ set in your life wondering how much acid you took as the blindfold came off. You 'll always wonder who she was -- such a great painter. You found a serene oasis where your doppelganger gave several different names and claimed to be the destruction of the planet itself. The best proof is that you are still disappointed."
 
-receipt = ExperienceReceipt(title="MEGAVIBE9000", experience_text=exp_text, coupon1=coupon1, coupon2=coupon2)
+receipt = ExperienceReceipt(title="MEGAVIBE\n9000", experience_text=exp_text, coupon1=coupon1, coupon2=coupon2)
 receipt.build_receipt()
 
 print_receipt(receipt)
