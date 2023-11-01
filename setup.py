@@ -20,6 +20,11 @@ setup(
     cmdclass={
         'install': PostInstallCommand,
     },
+    entry_points={
+        'console_scripts': [
+            'artery=artery:main'
+        ],
+    },
     description='Code for printing receipts as art on thermal printer.',
     author='Naomi Most',
     author_email='naomi@nthmost.com',
