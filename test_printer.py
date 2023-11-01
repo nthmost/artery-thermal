@@ -1,7 +1,6 @@
 from artery import ArteryPrinter, ArteryPrinterTest
 
 
-
 def simple_test():
     printer = ArteryPrinter()
     printer.p.text("\x1D\x21\x11")  # Set text to double height and width
