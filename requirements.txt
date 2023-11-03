@@ -3,3 +3,4 @@ escpos
 spacy
 markovify
 requests
+streamlit

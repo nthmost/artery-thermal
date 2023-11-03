@@ -23,6 +23,8 @@ class PostInstallCommand(install):
 with open('requirements.txt') as f:
     required = f.read().splitlines()
 
+print(required)
+
 setup(
     name='artery-thermal',
     version='0.1',

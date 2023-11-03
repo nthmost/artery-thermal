@@ -52,26 +52,16 @@ class MarkovGenerator:
         has_subject = any([word.dep_ == "nsubj" for word in doc])
         return sentence if has_subject else None
 
-    def generate_paragraph(self, model, num_sentences, start_with=None):
+    def generate_paragraph(self, model, num_sentences):
         paragraph = []
-
-        # Generate the first sentence with the given start, if provided
-        if start_with:
-            sentence = model.make_sentence_with_start(start_with, tries=self.tries)
-            if sentence and self.ensure_subject(sentence):
-                paragraph.append(sentence)
-                num_sentences -= 1  # Decrement num_sentences as we've already generated one sentence
-
-        # Generate the remaining sentences
         for _ in range(num_sentences):
             sentence = model.make_sentence(tries=self.tries)
             if sentence and self.ensure_subject(sentence):
                 paragraph.append(sentence)
-
         return ' '.join(paragraph)
 
     def generate_experience(self, num_sentences=6):
-        return format_text(self.generate_paragraph(self.combined_model(), num_sentences=6, start_with="You"))
+        return format_text(self.generate_paragraph(self.combined_model(), num_sentences=6))
 
 
 
