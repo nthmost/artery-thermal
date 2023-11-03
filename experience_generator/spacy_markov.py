@@ -1,5 +1,7 @@
 import spacy
 import markovify
+from markovify import ParamError
+
 from functools import lru_cache
 from .utils import format_text
 
@@ -57,6 +59,11 @@ class MarkovGenerator:
 
         # Generate the first sentence with the given start, if provided
         if start_with:
+            try:
+                sentence = model.make_sentence_with_start(start_with, tries=self.tries)
+            except ParamError:
+                sentence = model.make_sentence(tries=self.tries)
+
             sentence = model.make_sentence_with_start(start_with, tries=self.tries)
             if sentence and self.ensure_subject(sentence):
                 paragraph.append(sentence)
