@@ -1,101 +1,67 @@
 import spacy
 import markovify
-import re
-from functools import cache
+from functools import lru_cache
+from .utils import format_text
 
-nlp = spacy.load("en_core_web_sm")
+
 
 class POSifiedText(markovify.Text):
+    def __init__(self, input_text, nlp=None, **kwargs):
+        self.nlp = nlp or spacy.load("en_core_web_sm")
+        super().__init__(input_text, **kwargs)
+
     def word_split(self, sentence):
-        return ["::".join((word.orth_, word.pos_)) for word in nlp(sentence)]
+        return ["::".join((word.orth_, word.pos_)) for word in self.nlp(sentence)]
 
     def word_join(self, words):
-        sentence = " ".join(word.split("::")[0] for word in words)
-        return sentence
+        return " ".join(word.split("::")[0] for word in words)
+
+
 
 class MarkovGenerator:
-
-    def __init__(self, state_size=2):
-        self._state_size = state_size
-        self._party_model = None
-        self._tescreal_model = None
-        self._combined_model = None
-
-    @property
-    @cache
-    def party_db(self):
-        return open("PARTY_DB.txt").read()
+    def __init__(self, party_db_path, tescreal_db_path, state_size=2, tries=10):
+        self.state_size = state_size
+        self.tries = tries
+        self.nlp = spacy.load("en_core_web_sm")
+        self._party_db_path = party_db_path
+        self._tescreal_db_path = tescreal_db_path
 
     @property
-    @cache
-    def tescreal_db(self):
-        return open("TESCREAL_DB.txt").read()
-
-    @property
-    @cache
+    @lru_cache(maxsize=None)
     def party_model(self):
-        return POSifiedText(self.party_db, state_size=self._state_size)
+        with open(self._party_db_path, 'r') as f:
+            party_db = f.read()
+        return self.build_model(party_db)
 
     @property
-    @cache
+    @lru_cache(maxsize=None)
     def tescreal_model(self):
-        return POSifiedText(self.tescreal_db, state_size=self._state_size)
+        with open(self._tescreal_db_path, 'r') as f:
+            tescreal_db = f.read()
+        return self.build_model(tescreal_db)
 
-    @property
-    @cache
+    @lru_cache(maxsize=None)
     def combined_model(self):
         return markovify.combine([self.party_model, self.tescreal_model], [2, 1])
 
-    def format_text(self, text):
-    # Define a list of patterns and their replacements
-        replacements = [
-            (r" \,", ","),  # spaces before commas
-            (r" \.", "."),  # spaces before periods
-            (r" \?", "?"),  # spaces before question marks
-            (r" \!", "!"),  # spaces before exclamation marks
-            (r" ’", "’"),   # spaces before apostrophes
-            (r" ;", ";"),   # spaces before semicolons
-            (r" \:", ":"),  # spaces before colons
-            (r"\bca n’t\b", "can’t"),  # contractions
-            (r"\bdo n’t\b", "don’t"),
-            (r"\bare n’t\b", "aren’t"),
-            (r"\byou ’re\b", "you’re"),
-            # ... add more as needed
-        ]
-
-        # Apply the replacements
-        for pattern, replacement in replacements:
-            text = re.sub(pattern, replacement, text)
-
-        return text.capitalize()  # Capitalize the first letter
+    def build_model(self, corpus):
+        return POSifiedText(corpus, nlp=self.nlp, state_size=self.state_size)
 
     def ensure_subject(self, sentence):
-        doc = nlp(sentence)
+        doc = self.nlp(sentence)
         has_subject = any([word.dep_ == "nsubj" for word in doc])
         return sentence if has_subject else None
 
-    def generate_paragraph(self, model, num_sentences=5):
+    def generate_paragraph(self, model, num_sentences):
         paragraph = []
         for _ in range(num_sentences):
-            sentence = model.make_sentence()
+            sentence = model.make_sentence(tries=self.tries)
             if sentence and self.ensure_subject(sentence):
                 paragraph.append(sentence)
         return ' '.join(paragraph)
 
-    def generate_experience(self):
-        return self.format_text(self.generate_paragraph(self.combined_model))
+    def generate_experience(self, num_sentences=6):
+        return format_text(self.generate_paragraph(self.combined_model(), num_sentences=6))
 
-    def corpus_insights(self, corpus):
-        # Tokenize using spaces
-        tokens = corpus.split()
-        unique_tokens = set(tokens)
-    
-        # Count sentences
-        sentence_count = corpus.count('.') + corpus.count('!') + corpus.count('?')
-    
-        print(f"Total tokens: {len(tokens)}")
-        print(f"Unique tokens: {len(unique_tokens)}")
-        print(f"Total sentences: {sentence_count}")
-        print(f"Average tokens per sentence: {len(tokens) / sentence_count if sentence_count else 0}")
-        print(f"Sample tokens: {list(unique_tokens)[:50]}")  # Print 50 sample unique tokens
+
 
