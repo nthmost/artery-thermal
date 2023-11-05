@@ -7,7 +7,7 @@ from experience_generator import MarkovGenerator, send_to_discord
 # Configuration variables
 STATE_SIZE = 3
 TRIES = 10
-NUM_SENTENCES = 5
+NUM_SENTENCES = 7
 
 party_db_path = "PARTY_DB.txt"
 tescreal_db_path = "TESCREAL_DB.txt"
@@ -19,7 +19,9 @@ if 'generator' not in st.session_state:
 
 generator = st.session_state.generator
 
-st.write("### MEGAVIBE 9000")
+# st.write("### MEGAVIBE 9000")
+
+st.image("ccc/MEGAVIBE.png")
 
 if st.button("Generate"):
     # Place to show the GIF
