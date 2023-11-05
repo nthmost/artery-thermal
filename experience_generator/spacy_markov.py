@@ -91,19 +91,23 @@ class MarkovGenerator:
         has_subject = any([word.dep_ == "nsubj" for word in doc])
         return sentence if has_subject else None
 
-    def generate_sentence(self, model, start_with=None, max_retries=10):
+    def generate_sentence(self, model, start_with=None, max_retries=10, max_overlap_ratio=0.9, max_overlap_total=15):
         """Generate a valid sentence using the model."""
         sentence = None
         retries = 0
+    
         while retries < max_retries:
             
             if start_with:
                 try:
-                    sentence = model.make_sentence_with_start(start_with, tries=self.tries)
+                    sentence = model.make_sentence_with_start(start_with, tries=self.tries,
+                                 max_overlap_ratio=max_overlap_ratio, max_overlap_total=max_overlap_total)
                 except ParamError:
-                    sentence = model.make_sentence(tries=self.tries)
+                    sentence = model.make_sentence(tries=self.tries, max_overlap_ratio=max_overlap_ratio, 
+                                                    max_overlap_total=max_overlap_total)
             else:
-                sentence = model.make_sentence(tries=self.tries)
+                sentence = model.make_sentence(tries=self.tries, max_overlap_ratio=max_overlap_ratio, 
+                                                    max_overlap_total=max_overlap_total)
         
             print(sentence)
             # Validate the generated sentence

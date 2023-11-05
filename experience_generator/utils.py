@@ -53,4 +53,7 @@ def format_text(text):
     # Capitalize standalone 'i'
     text = re.sub(r'\b i(?=[.!?])', ' I', text)
 
+    # Ensure "AI" is always capitalized
+    text = re.sub(r'\bai\b', 'AI', text, flags=re.IGNORECASE)
+
     return text
