@@ -46,6 +46,7 @@ send_to_discord_flag = st.sidebar.checkbox("Send to Discord")
 
 # Generate button and timer in the main section
 st.write("### Generate Experience Text")
+
 if st.button("Generate"):
     # Place to show the GIF
     placeholder = st.empty()
@@ -57,11 +58,16 @@ if st.button("Generate"):
     placeholder.image(gif_bytes)        #, caption="Generating...")
 
     start_time = time.time()
-    generated_text = generator.generate_experience()
+    generated_text = generator.generate_experience(num_sentences=num_sentences)
     end_time = time.time()
 
     if send_to_discord_flag:
-        send_to_discord(generated_text)
+        # Format the message
+        state_info = f"State Size: {state_size}  Tries: {tries}  Sentences: {num_sentences}"
+        full_message = generated_text + "\n\n" + state_info
+        
+        # Send the message to Discord
+        send_to_discord(full_message)
 
     st.write("Generated in {:.2f} seconds.".format(end_time - start_time))
     st.write(generated_text)

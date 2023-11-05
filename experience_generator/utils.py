@@ -9,8 +9,18 @@ def capitalize_sentences(text):
     
     # Join the sentences back into a single string
     return ' '.join(capitalized_sentences)
+    
+    
+def contraction_replacer(match):
+    word = match.group(1)
+    contraction = match.group(2).replace(" ", "")
+    return f"{word}{contraction}"
+
 
 def format_text(text):
+    # Standardize straight apostrophes to curly ones
+    text = text.replace("'", "’")
+    
     # Define a list of patterns and their replacements
     replacements = [
         (r" \,", ","),  # spaces before commas
@@ -20,18 +30,27 @@ def format_text(text):
         (r" ’", "’"),   # spaces before apostrophes
         (r" ;", ";"),   # spaces before semicolons
         (r" \:", ":"),  # spaces before colons
-        (r"\bca n’t\b", "can’t"),  # contractions
-        (r"\bdo n’t\b", "don’t"),
-        (r"\bare n’t\b", "aren’t"),
-        (r"\byou ’re\b", "you’re"),
-        (r"\bwas n’t\b", "wasn’t"),
-        (r"\bcould n’t\b", "couldn’t"),
-        # ... add more as needed
     ]
 
     # Apply the replacements
     for pattern, replacement in replacements:
         text = re.sub(pattern, replacement, text)
-    
-    return capitalize_sentences(text)
 
+    # Fix dashes surrounded by spaces
+    text = re.sub(r' - ', '-', text)
+
+    # Handle contractions
+    contraction_patterns = [
+        r"\b(\w+) (’[a-z]{1,2})\b",  # for contractions like "you ’re"
+        r"\b(\w+ n) ’t\b",  # for contractions like "do n’t"
+        r"\b(\w+) (n’t)\b"  # for contractions like "do n’t" with a different pattern
+    ]
+    for pattern in contraction_patterns:
+        text = re.sub(pattern, contraction_replacer, text)
+    
+    text = capitalize_sentences(text)
+
+    # Capitalize standalone 'i'
+    text = re.sub(r'\b i(?=[.!?])', ' I', text)
+
+    return text
