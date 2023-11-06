@@ -1,12 +1,56 @@
 import streamlit as st
 import time
 import os
+import re
 import random
+import pandas as pd
 from experience_generator import MarkovGenerator, send_to_discord
 
 
 party_db_path = "PARTY_DB.txt"
 tescreal_db_path = "TESCREAL_DB.txt"
+
+
+def evaluate_corpus(file_path):
+    # Read the content of the file
+    with open(file_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    # Tokenize the content to extract words
+    words = re.findall(r'\b\w+\b', content.lower())
+
+    # Count unique words
+    unique_word_counts = {}
+    for word in words:
+        if word not in unique_word_counts:
+            unique_word_counts[word] = 1
+        else:
+            unique_word_counts[word] += 1
+
+    return unique_word_counts
+
+
+# Sidebar button
+if st.sidebar.button("Evaluate Corpus"):
+    # Evaluate PARTY_DB
+    party_word_counts = evaluate_corpus(party_db_path)
+    party_df = pd.DataFrame(list(party_word_counts.items()), columns=['Word', 'Frequency'])
+    party_df = party_df.sort_values(by='Frequency', ascending=False)  # Sort by frequency by default
+
+    # Evaluate TESCREAL_DB
+    tescreal_word_counts = evaluate_corpus(tescreal_db_path)
+    tescreal_df = pd.DataFrame(list(tescreal_word_counts.items()), columns=['Word', 'Frequency'])
+    tescreal_df = tescreal_df.sort_values(by='Frequency', ascending=False)  # Sort by frequency by default
+
+    # Display dataframes
+    st.write("### PARTY_DB Unique Words")
+    st.write(party_df)
+
+    st.write("\n")  # Add a separator
+
+    st.write("### TESCREAL_DB Unique Words")
+    st.write(tescreal_df)
+
 
 # Check if 'generator' exists in the session state and the previous values of state_size and tries
 if 'generator' not in st.session_state:
