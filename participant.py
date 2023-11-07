@@ -61,7 +61,7 @@ def generate_and_send_message():
 # Check if the correct password is entered
 if password_input in ("love", "secret", "sex", "God", "password"):
     st.sidebar.text("ACCESS GRANTED.")
-    placeholder.image(random_gif(), use_column_width=True)  # Display a loading gif
+    placeholder.image(random_gif(), width=300)  # use_column_width=True)  # Display a loading gif
     generated_text, generation_time = generate_and_send_message()
     placeholder.write(generated_text)
 
