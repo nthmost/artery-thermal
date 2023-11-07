@@ -6,6 +6,10 @@ name = "pypi"
 [packages]
 pillow = "*"
 escpos = "*"
+spacy = "*"
+markovify = "*"
+requests = "*"
+streamlit = "*"
 
 [dev-packages]
 
