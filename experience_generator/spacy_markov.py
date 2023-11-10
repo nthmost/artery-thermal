@@ -142,7 +142,7 @@ class MarkovGenerator:
     
         return ' '.join(paragraph)
 
-    def generate_experience(self, num_sentences=6):
+    def generate_experience(self, num_sentences=7):
         return format_text(self.generate_paragraph(self.combined_model(), num_sentences=num_sentences, start_with="You"))
 
 

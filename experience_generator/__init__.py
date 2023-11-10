@@ -21,11 +21,17 @@ def send_to_discord(content):
         print(f"Failed to send message to Discord. Status code: {response.status_code}")
 
 
-def generate_and_send_to_discord(state_size=2, num_sentences=6):
+def generate_and_send_to_discord(state_size=3, num_sentences=7):
     generator = MarkovGenerator(PARTYDB, TESCREALDB, state_size)
     exp_text = generator.generate_experience(num_sentences)
     send_to_discord(exp_text)
     print(exp_text)
+
+
+def generate_experience(state_size=3, num_sentences=7):
+    generator = MarkovGenerator(PARTYDB, TESCREALDB, state_size)
+    exp_text = generator.generate_experience(num_sentences)
+    return exp_text
 
 
 def main():

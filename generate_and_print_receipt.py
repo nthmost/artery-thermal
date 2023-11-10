@@ -42,4 +42,5 @@ def full_receipt():
 
 
 print_receipt(stripped_down_receipt())
+#print_receipt(full_receipt())
 
