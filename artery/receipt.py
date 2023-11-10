@@ -97,10 +97,11 @@ class ExperienceReceipt:
         # If any title or header contains a "\n", split these up into sequential
         # objects to avoid making the text_to_img processor have to figure it out.
         
-        title_parts = self.title.split("\n")
-        for part in title_parts:
-            self.receipt.append(ReceiptText(part, font_path=self.title_font, font_size="xlarge", align="center"))
+        #title_parts = self.title.split("\n")
+        #for part in title_parts:
+        #    self.receipt.append(ReceiptText(part, font_path=self.title_font, font_size="xlarge", align="center"))
         
+        self.receipt.append(ReceiptImage("ccc/MEGAVIBE9000.png"))
         self.receipt.append(ReceiptText(f"Date: {self.date}"))
         self.receipt.append(ReceiptText(f"Time: {self.time}"))
 
