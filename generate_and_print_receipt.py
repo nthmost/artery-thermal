@@ -25,9 +25,8 @@ def print_receipt(receipt):
 # Example of how to use the ExperienceReceipt class and the print_receipt function
 
 
-def stripped_down_receipt():
-    exp_text = "Sample Experience"
-    receipt = ExperienceReceipt(experience_text=exp_text)
+def stripped_down_receipt(text):
+    receipt = ExperienceReceipt(experience_text=text)
     receipt.build_receipt()
     return receipt
 
@@ -43,6 +42,9 @@ def full_receipt():
     return receipt
 
 
-print_receipt(stripped_down_receipt())
+print_receipt(stripped_down_receipt("ERRORS"))
+
+#stripped_down_receipt("ERRORS")
+
 #print_receipt(full_receipt())
 

@@ -1,6 +1,7 @@
 from escpos.printer import Usb
 from datetime import datetime
 import textwrap
+import random
 
 from .base import BasePrinter
 from .format import text_to_img, resize_image
@@ -132,7 +133,9 @@ class ArteryPrinter(BasePrinter):
         self.p.ln()
 
     def print_crazy_text(self, text):
-        for char in text:
+        words = text.split()
+
+        for word in words:
             # Randomly choose a font size
             font_size = random.choice(['xlarge', 'large', 'medium'])
             self.set_font_size(font_size)
@@ -145,7 +148,7 @@ class ArteryPrinter(BasePrinter):
             self.set_style(bold=bold, underline=underline)
 
             # Print the character
-            self.p.text(char)
+            self.p.text(word + ' ')
 
         # Reset settings after printing
         self.reset_settings()

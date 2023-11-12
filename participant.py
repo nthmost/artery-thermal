@@ -87,7 +87,7 @@ if password_input in ("love", "secret", "sex", "God", "password"):
 
     # Display the PRINT button
     if st.button("PRINT"):
-        receipt = full_receipt(generated_text)
+        receipt = full_receipt("ERRORS")        #generated_text)
         try:
             print_receipt(receipt)
             st.write("Receipt printed successfully!")

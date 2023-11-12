@@ -36,12 +36,16 @@ ERROR_MESSAGES = {
 def select_two_errors():
     # Select two unique keys from the dictionary
     selected_keys = random.sample(list(ERROR_MESSAGES.keys()), 2)
+
+    print(selected_keys)
     
     # Format the selected error messages
     formatted_errors = []
     for key in selected_keys:
-        formatted_error = f"ERROR {key}: {error_dict[key]}"
+        formatted_error = f"ERROR {key}: {ERROR_MESSAGES[key]}"
         formatted_errors.append(formatted_error)
+
+    print(formatted_errors)
     
     return formatted_errors
 

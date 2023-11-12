@@ -23,6 +23,8 @@ class CrazyText:
 
     def __init__(self, text, **kwargs):
         self.text = text
+    def to_dict(self):
+        return {}
 
 
 class ReceiptText:
@@ -126,6 +128,9 @@ class ExperienceReceipt:
         elif self.body == "ERRORS":
             part1 = '\n\n'.join(select_two_errors())
             part2 = '\n\n'.join(select_two_errors())
+
+        print(part1)
+        print(part2)
 
         if self.body == "ERRORS":
             self.receipt.append(CrazyText("{}".format(part1)))
