@@ -1,6 +1,7 @@
 from datetime import datetime
 from tempfile import NamedTemporaryFile
 from .format import text_to_img, resize_image
+from .errors import select_two_errors
 
 DEFAULT_COMPANY = "Community Capture Corporation"
 DEFAULT_MOTTO = "We've got you. ;)"
@@ -110,11 +111,15 @@ class ExperienceReceipt:
         # -- Experience section begins -- 
         # 
         # break the body down into parts so that coupons can be inserted.
+        part1 = ""
+        part2 = ""
         if not self.body:
             self.body = SAMPLE_EXPERIENCE
-
-        part1 = self.body.split(".")[0:2]
-        part2 = self.body.split(".")[3:]
+            part1 = self.body.split(".")[0:2]
+            part2 = self.body.split(".")[3:]
+        elif self.body == "ERRORS":
+            part1 = '\n\n'.join(select_two_errors())
+            part2 = '\n\n'.join(select_two_errors())
 
         self.receipt.append(ReceiptText("{}".format((". ").join(part1) + ". ")))
         if self.coupon1:
