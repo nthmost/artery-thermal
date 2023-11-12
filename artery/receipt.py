@@ -19,6 +19,12 @@ class ReceiptImage:
         self.img = None
         self.img_tmp = None
 
+class CrazyText:
+
+    def __init__(self, text, **kwargs):
+        self.text = text
+
+
 class ReceiptText:
 
     def __init__(self, text, **kwargs):
@@ -121,10 +127,17 @@ class ExperienceReceipt:
             part1 = '\n\n'.join(select_two_errors())
             part2 = '\n\n'.join(select_two_errors())
 
-        self.receipt.append(ReceiptText("{}".format((". ").join(part1) + ". ")))
+        if self.body == "ERRORS":
+            self.receipt.append(CrazyText("{}".format(part1)))
+        else:
+            self.receipt.append(ReceiptText("{}".format((". ").join(part1) + ". ")))
         if self.coupon1:
             self.receipt.append(ReceiptImage(self.coupon1))
-        self.receipt.append(ReceiptText("{}".format((". ").join(part2))))
+
+        if self.body == "ERRORS":
+            self.receipt.append(CrazyText("{}".format(part2)))
+        else:
+            self.receipt.append(ReceiptText("{}".format((". ").join(part2))))
 
         # -- end of Experience section --
         

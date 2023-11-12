@@ -1,6 +1,6 @@
 from datetime import datetime
 from artery import MockArteryPrinter, ArteryPrinter
-from artery import ExperienceReceipt, ReceiptImage, ReceiptText
+from artery import ExperienceReceipt, ReceiptImage, ReceiptText, CrazyText
 
 from experience_generator import generate_experience
 from experience_generator import send_to_discord
@@ -17,6 +17,8 @@ def print_receipt(receipt):
             printer.print_image(obj.filepath)
         elif isinstance(obj, ReceiptText):
             printer.print_text(obj.text, **obj.to_dict())
+        elif isinstance(obj, CrazyText):
+            printer.print_crazy_text(obj.text, **obj.to_dict())
 
     printer.finish()
 

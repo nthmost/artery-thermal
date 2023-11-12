@@ -5,7 +5,7 @@ import requests
 
 from artery import ArteryPrinter
 from artery import pick_coupon
-from artery import ExperienceReceipt, ReceiptImage, ReceiptText
+from artery import ExperienceReceipt, ReceiptImage, ReceiptText, CrazyText
 
 
 FLASK_SERVICE_URL = "http://192.168.2.2:5000/generate"
@@ -49,6 +49,8 @@ def print_receipt(receipt):
             printer.print_image(obj.filepath)
         elif isinstance(obj, ReceiptText):
             printer.print_text(prep_text(obj.text), **obj.to_dict())
+        elif isinstance(obj, CrazyText):
+            printer.print_crazy_text(obj.text, **obj.to_dict())
 
     printer.finish()
 

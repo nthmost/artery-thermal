@@ -131,6 +131,26 @@ class ArteryPrinter(BasePrinter):
         self.reset_settings()
         self.p.ln()
 
+    def print_crazy_text(self, text):
+        for char in text:
+            # Randomly choose a font size
+            font_size = random.choice(['xlarge', 'large', 'medium'])
+            self.set_font_size(font_size)
+
+            # Randomly decide whether to apply bold and/or underline
+            bold = random.choice([True, False])
+            underline = random.choice([0, 1, 2])  # 0: no underline, 1: underline, 2: double underline
+
+            # Apply styles
+            self.set_style(bold=bold, underline=underline)
+
+            # Print the character
+            self.p.text(char)
+
+        # Reset settings after printing
+        self.reset_settings()
+        self.p.ln()
+
 
     def reset_settings(self):
         """Reset settings to the printer's default."""
