@@ -33,7 +33,7 @@ def stripped_down_receipt(text):
 
 def full_receipt():
     exp_text = generate_experience()
-    send_to_discord(exp_text)
+    #send_to_discord(exp_text)
     coupon1 = pick_coupon("coupons")
     coupon2 = pick_coupon("coupons")
 
@@ -42,9 +42,9 @@ def full_receipt():
     return receipt
 
 
-print_receipt(stripped_down_receipt("ERRORS"))
+#print_receipt(stripped_down_receipt("ERRORS"))
 
 #stripped_down_receipt("ERRORS")
 
-#print_receipt(full_receipt())
+print_receipt(full_receipt())
 

@@ -9,7 +9,7 @@ DEFAULT_LOGO = "ccc/wings.png"
 DEFAULT_TITLE = "MEGAVIBE 9000"
 DEFAULT_TITLE_FONT = "fonts/zig.ttf"
 
-SAMPLE_EXPERIENCE = "You rocked your head in the most amazing DJ set in your life wondering how much acid you took as the blindfold came off. You 'll always wonder who she was -- such a great painter. You found a serene oasis in the same level as Aristotle, while he’s so smart. Your doppelganger gave several different names and claimed to be the destruction of the planet itself. The best proof is that you are still disappointed."
+#SAMPLE_EXPERIENCE = "You rocked your head in the most amazing DJ set in your life wondering how much acid you took as the blindfold came off. You 'll always wonder who she was -- such a great painter. You found a serene oasis in the same level as Aristotle, while he’s so smart. Your doppelganger gave several different names and claimed to be the destruction of the planet itself. The best proof is that you are still disappointed."
 
 
 class ReceiptImage:
@@ -97,7 +97,6 @@ class ExperienceReceipt:
         which can be rendered using a BasePrinter object (e.g. through PIL to an 
         image, or through an ESC/POS thermal printer.
         """
-
         self.receipt = []
         self.set_date_time()
 
@@ -121,26 +120,27 @@ class ExperienceReceipt:
         # break the body down into parts so that coupons can be inserted.
         part1 = ""
         part2 = ""
-        if not self.body:
-            self.body = SAMPLE_EXPERIENCE
-            part1 = self.body.split(".")[0:2]
-            part2 = self.body.split(".")[3:]
-        elif self.body == "ERRORS":
-            part1 = '\n\n'.join(select_two_errors())
-            part2 = '\n\n'.join(select_two_errors())
-
-        print(part1)
-        print(part2)
 
         if self.body == "ERRORS":
-            self.receipt.append(CrazyText("{}".format(part1)))
+            part1 = select_two_errors()
+            part2 = select_two_errors()
+        else:
+            part1 = self.body.split(".")[0:2]
+            part2 = self.body.split(".")[3:]
+
+        print("PART1: ", part1)
+        print("PART2: ", part2)
+
+        if self.body == "ERRORS":
+            self.receipt.append(CrazyText("{}".format((". ").join(part1) + ". ")))
         else:
             self.receipt.append(ReceiptText("{}".format((". ").join(part1) + ". ")))
+
         if self.coupon1:
             self.receipt.append(ReceiptImage(self.coupon1))
 
         if self.body == "ERRORS":
-            self.receipt.append(CrazyText("{}".format(part2)))
+            self.receipt.append(CrazyText("{}".format((". ").join(part2))))
         else:
             self.receipt.append(ReceiptText("{}".format((". ").join(part2))))
 
