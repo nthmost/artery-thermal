@@ -8,6 +8,7 @@ DEFAULT_MOTTO = "We've got you. ;)"
 DEFAULT_LOGO = "ccc/wings.png"
 DEFAULT_TITLE = "MEGAVIBE 9000"
 DEFAULT_TITLE_FONT = "fonts/zig.ttf"
+DEFAULT_HEADER = "Your Experience"
 
 #SAMPLE_EXPERIENCE = "You rocked your head in the most amazing DJ set in your life wondering how much acid you took as the blindfold came off. You 'll always wonder who she was -- such a great painter. You found a serene oasis in the same level as Aristotle, while he’s so smart. Your doppelganger gave several different names and claimed to be the destruction of the planet itself. The best proof is that you are still disappointed."
 
@@ -57,9 +58,9 @@ class ReceiptText:
 
 
 class ExperienceReceipt:
-    def __init__(self, title="MEGAVIBE\n9000", title_font=DEFAULT_TITLE_FONT, 
+    def __init__(self, title=DEFAULT_TITLE, title_font=DEFAULT_TITLE_FONT, 
                     motto=DEFAULT_MOTTO, company=DEFAULT_COMPANY, logo=DEFAULT_LOGO,
-                    coupon1=None, coupon2=None, experience_text=None,
+                    coupon1=None, coupon2=None, experience_text=None, header=DEFAULT_HEADER,
                     date=None, time=None, receipt_no=None,
                 ):
 
@@ -72,7 +73,7 @@ class ExperienceReceipt:
         self.motto = motto
         self.coupon1 = coupon1
         self.coupon2 = coupon2
-        self.header = "Your Experience"
+        self.header = header
         self.body = experience_text
         self.company = company
         self.motto = motto
@@ -109,7 +110,8 @@ class ExperienceReceipt:
         #for part in title_parts:
         #    self.receipt.append(ReceiptText(part, font_path=self.title_font, font_size="xlarge", align="center"))
         
-        self.receipt.append(ReceiptImage("ccc/MEGAVIBE9000.png"))
+        #self.receipt.append(ReceiptImage("ccc/MEGAVIBE9000.png"))
+        self.receipt.append(ReceiptImage(self.logo))
         self.receipt.append(ReceiptText(f"Date: {self.date}"))
         self.receipt.append(ReceiptText(f"Time: {self.time}"))
 
