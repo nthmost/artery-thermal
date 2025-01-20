@@ -69,7 +69,7 @@ if st.button("Generate"):
     try:
         state_info = f"State Size: {STATE_SIZE}  Tries: {TRIES}  Sentences: {NUM_SENTENCES}"
         full_message = generated_text + "\n\n" + state_info
-        send_to_discord(full_message)
+        # send_to_discord(full_message)
         st.write("Message sent to Discord!")
     except Exception as e:
         st.write(f"Failed to send to Discord: {e}")
