@@ -3,7 +3,6 @@ from artery import MockArteryPrinter, ArteryPrinter
 from artery import ExperienceReceipt, ReceiptImage, ReceiptText, CrazyText
 
 from experience_generator import generate_experience
-from experience_generator import send_to_discord
 
 from artery import pick_coupon
 
@@ -33,7 +32,6 @@ def stripped_down_receipt(text):
 
 def full_receipt():
     exp_text = generate_experience()
-    #send_to_discord(exp_text)
     coupon1 = pick_coupon("coupons")
     coupon2 = pick_coupon("coupons")
 
