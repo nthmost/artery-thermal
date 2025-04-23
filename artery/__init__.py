@@ -1,6 +1,6 @@
 from .command import ArteryPrinter, ArteryPrinterTest
 from .base import MockArteryPrinter
-from .receipt import ExperienceReceipt, ReceiptImage, ReceiptText, CrazyText
+from .receipt import ExperienceReceipt, ReceiptImage, ReceiptText, CrazyText, ConfessionReceipt
 
 import os, random
 

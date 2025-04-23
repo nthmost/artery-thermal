@@ -61,7 +61,7 @@ class ExperienceReceipt:
     def __init__(self, title=DEFAULT_TITLE, title_font=DEFAULT_TITLE_FONT, 
                     motto=DEFAULT_MOTTO, company=DEFAULT_COMPANY, logo=DEFAULT_LOGO,
                     coupon1=None, coupon2=None, experience_text=None, header=DEFAULT_HEADER,
-                    date=None, time=None, receipt_no=None,
+                    date=None, time=None, receipt_no=None, top_logo=False,
                 ):
 
         # this array will hold the sequence of elements to be printed.
@@ -78,6 +78,9 @@ class ExperienceReceipt:
         self.company = company
         self.motto = motto
         self.receipt_no = receipt_no
+
+        # option to turn off printing the logo at the top
+        self.top_logo = top_logo
 
         # date and time can be provided, or they will be set upon self.build_receipt()
         self.date = None
@@ -111,7 +114,9 @@ class ExperienceReceipt:
         #    self.receipt.append(ReceiptText(part, font_path=self.title_font, font_size="xlarge", align="center"))
         
         #self.receipt.append(ReceiptImage("ccc/MEGAVIBE9000.png"))
-        self.receipt.append(ReceiptImage(self.logo))
+        if self.top_logo:
+            self.receipt.append(ReceiptImage(self.logo))
+
         self.receipt.append(ReceiptText(f"Date: {self.date}"))
         self.receipt.append(ReceiptText(f"Time: {self.time}"))
 
@@ -161,3 +166,39 @@ class ExperienceReceipt:
         self.receipt.append(ReceiptText(f"Receipt No.: {self.receipt_no}"))
 
 
+
+
+class ConfessionReceipt(ExperienceReceipt):
+
+    def build_receipt(self):
+        """  Overrides ExperienceReceipt.build_receipt.  Changes so that body (text) respects
+        line breaks in string, enabling proper formatting of poetry and the like, and does not break
+        up the "experience" with coupons.  Instead, places 1 single coupon at end of receipt.
+        """
+        self.receipt = []
+        self.set_date_time()
+
+        if self.top_logo:
+            self.receipt.append(ReceiptImage(self.logo))
+
+        self.receipt.append(ReceiptText(self.header, font_size="large", bold=True))
+
+        # -- Experience section begins --
+        for paragraph in self.body.split("\n"):
+            self.receipt.append(ReceiptText("{}".format(paragraph)))
+
+        if self.coupon1:
+            self.receipt.append(ReceiptImage(self.coupon1))
+        # -- end of Experience section --
+
+        # -- Company footer should be centered. Name -> "motto" -> logo.
+        self.receipt.append(ReceiptText(self.company, align="center", bold=True, letter_spacing=15,
+                                        underline=2, font_size="medium"))
+        self.receipt.append(ReceiptText(self.motto))
+        self.receipt.append(ReceiptImage(self.logo))
+
+        if self.coupon2:
+            self.receipt.append(ReceiptImage(self.coupon2))
+
+        #self.receipt.append(ReceiptText(f"Date: {self.date}"))
+        #self.receipt.append(ReceiptText(f"Time: {self.time}"))
