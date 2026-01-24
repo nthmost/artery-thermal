@@ -2,6 +2,7 @@ from datetime import datetime
 from tempfile import NamedTemporaryFile
 from .format import text_to_img, resize_image
 from .errors import select_two_errors
+from .glitch import generate_glitch_bands
 
 DEFAULT_COMPANY = "Community Capture Corporation"
 DEFAULT_MOTTO = "We've got you. ;)"
@@ -19,6 +20,15 @@ class ReceiptImage:
         self.filepath = filepath
         self.img = None
         self.img_tmp = None
+
+
+class GlitchImage:
+    """A receipt image that holds a PIL Image directly (for generated glitches)."""
+
+    def __init__(self, pil_image):
+        self.img = pil_image
+        self.filepath = None  # No filepath since it's generated
+
 
 class CrazyText:
 
@@ -206,9 +216,12 @@ class ConfessionReceipt(ExperienceReceipt):
 
 class GhostReceipt(ExperienceReceipt):
 
-    def build_receipt(self):
-        """Ghost receipt - ultra minimal aesthetic with just logos and text.
-        Logo at top, transcribed text, logo at bottom. Nothing else.
+    def build_receipt(self, num_glitch_bands=2):
+        """Ghost receipt - ultra minimal aesthetic with glitch separation.
+        Logo at top, transcribed text, glitch bands, logo at bottom.
+
+        Args:
+            num_glitch_bands: Number of glitch image bands to insert (default 2)
         """
         self.receipt = []
         self.set_date_time()
@@ -221,5 +234,15 @@ class GhostReceipt(ExperienceReceipt):
         for paragraph in self.body.split("\n"):
             self.receipt.append(ReceiptText("{}".format(paragraph)))
 
-        # -- Bottom logo only --
+        # -- Glitch bands between text and bottom logo --
+        glitch_bands = generate_glitch_bands(
+            width=384,
+            num_bands=num_glitch_bands,
+            band_height=40,
+            density='medium'
+        )
+        for band in glitch_bands:
+            self.receipt.append(GlitchImage(band))
+
+        # -- Bottom logo --
         self.receipt.append(ReceiptImage(self.logo))
