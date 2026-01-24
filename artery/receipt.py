@@ -154,7 +154,7 @@ class ExperienceReceipt:
         # -- end of Experience section --
         
         # -- Company footer should be centered. Name -> "motto" -> logo.
-        self.receipt.append(ReceiptText(self.company, align="center", bold=True, letter_spacing=15,
+        self.receipt.append(ReceiptText(self.company, align="center", bold=True,
                                         underline=2, font_size="medium"))
         self.receipt.append(ReceiptText(self.motto))
         self.receipt.append(ReceiptImage(self.logo))
@@ -192,7 +192,7 @@ class ConfessionReceipt(ExperienceReceipt):
         # -- end of Experience section --
 
         # -- Company footer should be centered. Name -> "motto" -> logo.
-        self.receipt.append(ReceiptText(self.company, align="center", bold=True, letter_spacing=15,
+        self.receipt.append(ReceiptText(self.company, align="center", bold=True,
                                         underline=2, font_size="medium"))
         self.receipt.append(ReceiptText(self.motto))
         self.receipt.append(ReceiptImage(self.logo))
@@ -202,3 +202,24 @@ class ConfessionReceipt(ExperienceReceipt):
 
         #self.receipt.append(ReceiptText(f"Date: {self.date}"))
         #self.receipt.append(ReceiptText(f"Time: {self.time}"))
+
+
+class GhostReceipt(ExperienceReceipt):
+
+    def build_receipt(self):
+        """Ghost receipt - ultra minimal aesthetic with just logos and text.
+        Logo at top, transcribed text, logo at bottom. Nothing else.
+        """
+        self.receipt = []
+        self.set_date_time()
+
+        # Top logo
+        if self.top_logo:
+            self.receipt.append(ReceiptImage(self.logo))
+
+        # -- The transcribed text (respects line breaks) --
+        for paragraph in self.body.split("\n"):
+            self.receipt.append(ReceiptText("{}".format(paragraph)))
+
+        # -- Bottom logo only --
+        self.receipt.append(ReceiptImage(self.logo))

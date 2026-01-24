@@ -90,6 +90,13 @@ class ArteryPrinter(BasePrinter):
         else:
             raise ValueError(f"Font size '{size}' not recognized. Must be one of: xlarge, large, medium, normal, small")
 
+    def set_letter_spacing(self, spacing=0):
+        """Set the letter spacing for the printer using ESC/POS command."""
+        if 0 <= spacing <= 255:
+            self.p.text(chr(27) + chr(32) + chr(spacing))
+        else:
+            raise ValueError("Spacing must be between 0 and 255")
+
     def print_text(self, text, font_size=None, font_path=None, align=DEFAULT_ALIGN, 
                         letter_spacing=None, bold=False, underline=0):
         # Reset all settings at the start for a clean slate
@@ -160,6 +167,7 @@ class ArteryPrinter(BasePrinter):
         self.p.text(self.FONT_MAP['normal'])
         self.p.text("\x1B\x45\x00")  # Turn off bold
         self.p.text("\x1B\x2D\x00")  # Turn off underline
+        self.p.text("\x1B\x20\x00")  # Reset letter spacing to 0
 
     def finish(self):
         self.p.ln()
